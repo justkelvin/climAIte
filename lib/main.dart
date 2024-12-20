@@ -14,7 +14,7 @@ class WeatherApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Weather AI',
+      title: 'climAIte',
       theme: AppTheme.lightTheme(),
       darkTheme: AppTheme.darkTheme(),
       themeMode: ThemeMode.system,
@@ -31,7 +31,7 @@ class WeatherHomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Text(
-          'Weather AI App',
+          'climAIte',
           style: Theme.of(context).textTheme.displayLarge,
         ),
       ),
