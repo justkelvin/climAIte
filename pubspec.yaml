@@ -1,5 +1,8 @@
 name: climaite
-description: "ClimAIte is a cross-platform weather application built using Flutter, designed for both iOS and Android. The app combines reliable weather data from OpenMateo with the intelligence of Google's Gemini AI to provide a unique and engaging weather experience."
+description: "ClimAIte is a cross-platform weather application built using
+  Flutter, designed for both iOS and Android. The app combines reliable weather
+  data from OpenMateo with the intelligence of Google's Gemini AI to provide a
+  unique and engaging weather experience."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -13,6 +16,7 @@ dependencies:
     sdk: flutter
   flutter_animate: ^4.5.2
   flutter_bloc: ^8.1.6
+  flutter_dotenv: ^5.2.1
   flutter_local_notifications: ^18.0.1
   geolocator: ^13.0.2
   google_fonts: ^6.2.1
