@@ -3,6 +3,7 @@ import 'package:climaite/features/weather/bloc/weather_bloc.dart';
 import 'package:climaite/features/weather/bloc/weather_event.dart';
 import 'package:climaite/features/weather/bloc/weather_state.dart';
 import 'package:climaite/features/weather/screens/location_search_screen.dart';
+import 'package:climaite/features/weather/screens/settings_screen.dart';
 import 'package:climaite/features/weather/widgets/current_weather_card.dart';
 import 'package:climaite/features/weather/widgets/daily_forecast_list.dart';
 import 'package:climaite/features/weather/widgets/hourly_forecast_list.dart';
@@ -64,7 +65,12 @@ class WeatherHomeScreen extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.settings),
                       onPressed: () {
-                        // TODO: Implement settings navigation
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingsScreen(),
+                          ),
+                        );
                       },
                     ),
                   ],
