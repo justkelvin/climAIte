@@ -18,35 +18,39 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
   final LocationService _locationService = LocationService();
   List<LocationResult> _searchResults = [];
   bool _isLoading = false;
+  bool _isMounted = true;
 
   @override
   void dispose() {
-    _searchController.dispose();
+    // _searchController.dispose();
+    _isMounted = false;
     super.dispose();
   }
 
   Future<void> _searchLocation(String query) async {
     if (query.length < 2) return;
 
+    if (!mounted) return;
     setState(() {
       _isLoading = true;
     });
 
     try {
       final results = await _locationService.searchLocation(query);
+      if (!mounted) return;
       setState(() {
         _searchResults = results;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error searching location: $e')),
-        );
-      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error searching location: $e')),
+      );
     }
   }
 
