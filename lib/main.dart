@@ -6,6 +6,7 @@ import 'package:climaite/data/repositories/weather_repository.dart';
 import 'package:climaite/features/weather/bloc/weather_bloc.dart';
 import 'package:climaite/features/weather/bloc/weather_event.dart';
 import 'package:climaite/features/weather/screens/weather_home_screen.dart';
+import 'package:climaite/services/background_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,6 +16,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: ".env"); // Load .env file before app starts
+
+  // Initialize services
+  await BackgroundService.initialize();
 
   runApp(
     MultiProvider(
