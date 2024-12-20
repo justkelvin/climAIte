@@ -27,7 +27,8 @@ class WeatherApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Weather AI',
+        debugShowCheckedModeBanner: false,
+        title: 'climAIte',
         theme: AppTheme.lightTheme(),
         darkTheme: AppTheme.darkTheme(),
         themeMode: ThemeMode.system,
@@ -69,7 +70,7 @@ class _WeatherHomePageState extends State<WeatherHomePage> {
           builder: (context, state) {
             if (state is WeatherInitial) {
               return const Center(
-                child: Text('Welcome to Weather AI'),
+                child: Text('Welcome to climAIte'),
               );
             }
 
