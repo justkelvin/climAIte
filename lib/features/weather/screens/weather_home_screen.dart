@@ -36,14 +36,14 @@ class WeatherHomeScreen extends StatelessWidget {
             child: CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  expandedHeight: 100,
+                  expandedHeight: 80,
                   floating: true,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
                     title: Text(
                       'climAIte',
                       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                     ),
                     centerTitle: true,
