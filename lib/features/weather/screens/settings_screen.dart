@@ -1,4 +1,7 @@
 // lib/features/weather/screens/settings_screen.dart
+import 'package:climaite/core/constants/app_constants.dart';
+import 'package:climaite/services/background_service.dart';
+import 'package:climaite/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -79,11 +82,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text('Weather Alerts'),
             subtitle: const Text('Get notified about severe weather conditions'),
             value: _notificationsEnabled,
-            onChanged: (value) {
+            onChanged: (value) async {
+              if (value) {
+                final granted = await NotificationService.instance.requestPermission();
+                if (!granted) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Notification permission denied'),
+                      ),
+                    );
+                  }
+                  return;
+                }
+              }
+
               setState(() {
                 _notificationsEnabled = value;
-                _saveSettings();
               });
+              await _saveSettings();
+
+              if (value) {
+                // Start background task
+                await BackgroundService.registerPeriodicTask(
+                  latitude: AppConstants.defaultLat,
+                  longitude: AppConstants.defaultLon,
+                  location: AppConstants.defaultCity,
+                );
+              } else {
+                // Cancel background task
+                await BackgroundService.cancelAllTasks();
+              }
             },
           ),
           const Divider(),
