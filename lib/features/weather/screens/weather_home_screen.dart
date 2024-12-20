@@ -4,6 +4,7 @@ import 'package:climaite/features/weather/bloc/weather_event.dart';
 import 'package:climaite/features/weather/bloc/weather_state.dart';
 import 'package:climaite/features/weather/screens/location_search_screen.dart';
 import 'package:climaite/features/weather/screens/settings_screen.dart';
+import 'package:climaite/features/weather/widgets/ai_insights_card.dart';
 import 'package:climaite/features/weather/widgets/current_weather_card.dart';
 import 'package:climaite/features/weather/widgets/daily_forecast_list.dart';
 import 'package:climaite/features/weather/widgets/hourly_forecast_list.dart';
@@ -85,6 +86,10 @@ class WeatherHomeScreen extends StatelessWidget {
                           weather: weather.current,
                         ),
                         const SizedBox(height: 24),
+                        AIInsightsCard(
+                          weather: weather,
+                          location: 'Your Location',
+                        ),
                         Text(
                           'Hourly Forecast',
                           style: Theme.of(context).textTheme.titleLarge,
