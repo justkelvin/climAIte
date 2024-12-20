@@ -1,5 +1,6 @@
 // lib/main.dart
 import 'package:climaite/core/constants/app_constants.dart';
+import 'package:climaite/core/providers/settings_provider.dart';
 import 'package:climaite/core/theme/app_theme.dart';
 import 'package:climaite/data/repositories/weather_repository.dart';
 import 'package:climaite/features/weather/bloc/weather_bloc.dart';
@@ -7,10 +8,26 @@ import 'package:climaite/features/weather/bloc/weather_event.dart';
 import 'package:climaite/features/weather/screens/weather_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const WeatherApp());
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SettingsProvider()..initialize(),
+        ),
+        BlocProvider(
+          create: (context) => WeatherBloc(
+            weatherRepository: WeatherRepository(),
+          ),
+        ),
+      ],
+      child: WeatherApp(),
+    ),
+  );
 }
 
 class WeatherApp extends StatelessWidget {
