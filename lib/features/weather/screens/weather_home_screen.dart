@@ -90,6 +90,7 @@ class WeatherHomeScreen extends StatelessWidget {
                           weather: weather,
                           location: 'Your Location',
                         ),
+                        const SizedBox(height: 24),
                         Text(
                           'Hourly Forecast',
                           style: Theme.of(context).textTheme.titleLarge,
