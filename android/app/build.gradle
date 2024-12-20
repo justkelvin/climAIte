@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.syncverse.climaite.climaite"
+    namespace = "com.syncverse.climaite"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
