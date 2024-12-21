@@ -1,6 +1,7 @@
 // lib/main.dart
 import 'package:climaite/core/constants/app_constants.dart';
 import 'package:climaite/core/providers/settings_provider.dart';
+import 'package:climaite/core/services/navigation_service.dart';
 import 'package:climaite/core/theme/app_theme.dart';
 import 'package:climaite/data/repositories/weather_repository.dart';
 import 'package:climaite/features/weather/bloc/weather_bloc.dart';
@@ -52,6 +53,7 @@ class WeatherApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        navigatorKey: NavigationService.navigatorKey,
         title: 'climAIte',
         theme: AppTheme.lightTheme(),
         darkTheme: AppTheme.darkTheme(),
