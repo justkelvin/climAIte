@@ -18,6 +18,7 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
   final LocationService _locationService = LocationService();
   List<LocationResult> _searchResults = [];
   bool _isLoading = false;
+  // ignore: unused_field
   bool _isMounted = true;
 
   @override
