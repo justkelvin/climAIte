@@ -1,4 +1,7 @@
 // lib/services/notification_service.dart
+import 'dart:convert';
+
+import 'package:climaite/core/services/notification_handler.dart';
 import 'package:climaite/data/models/weather_code.dart';
 import 'package:climaite/data/models/weather_model.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -32,13 +35,10 @@ class NotificationService {
 
     await _notifications.initialize(
       settings,
-      onDidReceiveNotificationResponse: _onNotificationTapped,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        NotificationHandler.handleNotificationTap(response.payload);
+      },
     );
-  }
-
-  void _onNotificationTapped(NotificationResponse response) {
-    // Handle notification tap
-    print('Notification tapped: ${response.payload}');
   }
 
   Future<bool> requestPermission() async {
@@ -60,6 +60,12 @@ class NotificationService {
     final weatherCode = WeatherCode.fromCode(weather.current.weathercode);
 
     if (_shouldShowAlert(weather)) {
+      // Create notification payload
+      final payload = json.encode({
+        'weather': weather.toJson(),
+        'location': location,
+      });
+
       await _notifications.show(
         0,
         'Weather Alert for $location',
@@ -78,8 +84,46 @@ class NotificationService {
             presentSound: true,
           ),
         ),
+        payload: payload,
       );
     }
+  }
+
+  Future<void> scheduleWeatherCheck({
+    required WeatherData weather,
+    required String location,
+  }) async {
+    final now = DateTime.now();
+    final scheduledTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      now.hour + 1,
+    );
+
+    // Create notification payload
+    final payload = json.encode({
+      'weather': weather.toJson(),
+      'location': location,
+    });
+
+    await _notifications.zonedSchedule(
+      1,
+      'Weather Update',
+      'Checking current weather conditions...',
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'weather_updates',
+          'Weather Updates',
+          channelDescription: 'Regular weather condition updates',
+        ),
+      ),
+      payload: payload,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
   }
 
   bool _shouldShowAlert(WeatherData weather) {
@@ -122,33 +166,6 @@ class NotificationService {
     }
 
     return 'Current conditions: ${conditions.join(', ')}. Take necessary precautions.';
-  }
-
-  Future<void> scheduleWeatherCheck() async {
-    final now = DateTime.now();
-    final scheduledTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      now.hour + 1,
-    );
-
-    await _notifications.zonedSchedule(
-      1,
-      'Weather Update',
-      'Checking current weather conditions...',
-      tz.TZDateTime.from(scheduledTime, tz.local),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'weather_updates',
-          'Weather Updates',
-          channelDescription: 'Regular weather condition updates',
-        ),
-      ),
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
   }
 
   Future<void> cancelAllNotifications() async {
