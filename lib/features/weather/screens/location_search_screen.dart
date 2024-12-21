@@ -83,7 +83,9 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
             ),
           ),
           if (_isLoading)
-            const Center(child: CircularProgressIndicator())
+            const Center(
+              child: CircularProgressIndicator(),
+            )
           else
             Expanded(
               child: ListView.builder(
