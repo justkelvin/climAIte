@@ -88,7 +88,7 @@ class WeatherHomeScreen extends StatelessWidget {
                         const SizedBox(height: 24),
                         AIInsightsCard(
                           weather: weather,
-                          location: 'Your Location',
+                          location: "Your Location",
                         ),
                         const SizedBox(height: 24),
                         Text(
