@@ -24,6 +24,12 @@ void callbackDispatcher() {
         location: inputData?['location'] ?? 'Unknown Location',
       );
 
+      // Schedule next weather check
+      await NotificationService.instance.scheduleWeatherCheck(
+        weather: weather,
+        location: inputData?['location'] ?? 'Unknown Location',
+      );
+
       return true;
     } catch (e) {
       print('Background task failed: $e');
