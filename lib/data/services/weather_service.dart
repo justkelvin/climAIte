@@ -9,7 +9,14 @@ class WeatherService {
     required double latitude,
     required double longitude,
   }) async {
-    final uri = Uri.parse(
+    // First get location name using reverse geocoding
+    final locationUri = Uri.parse('https://geocoding-api.open-meteo.com/v1/reverse?latitude=$latitude&longitude=$longitude');
+
+    final locationResponse = await http.get(locationUri);
+    final locationData = json.decode(locationResponse.body);
+
+    // Then get weather data
+    final weatherUri = Uri.parse(
       '${ApiConstants.baseUrl}${ApiConstants.forecast}'
       '?latitude=$latitude'
       '&longitude=$longitude'
@@ -19,16 +26,15 @@ class WeatherService {
       '&timezone=auto',
     );
 
-    try {
-      final response = await http.get(uri);
+    final weatherResponse = await http.get(weatherUri);
 
-      if (response.statusCode == 200) {
-        return WeatherData.fromJson(json.decode(response.body));
-      } else {
-        throw Exception('Failed to load weather data');
-      }
-    } catch (e) {
-      throw Exception('Failed to connect to weather service: $e');
+    if (weatherResponse.statusCode == 200) {
+      final weatherData = json.decode(weatherResponse.body);
+      // Merge location data into weather response
+      weatherData['location'] = locationData['results']?[0];
+      return WeatherData.fromJson(weatherData);
+    } else {
+      throw Exception('Failed to load weather data');
     }
   }
 }
