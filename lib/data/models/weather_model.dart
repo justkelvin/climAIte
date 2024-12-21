@@ -26,6 +26,17 @@ class WeatherData {
       timezone: json['timezone'] ?? 'UTC',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'current': current.toJson(),
+      'daily': daily.toJson(),
+      'hourly': hourly.toJson(),
+      'latitude': latitude,
+      'longitude': longitude,
+      'timezone': timezone,
+    };
+  }
 }
 
 class Current {
@@ -51,6 +62,16 @@ class Current {
       weathercode: json['weathercode']?.toInt() ?? 0,
       time: json['time'] ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'temperature': temperature,
+      'weathercode': weathercode,
+      'windspeed': windspeed,
+      'winddirection': winddirection,
+      // ... other properties
+    };
   }
 }
 
@@ -78,6 +99,16 @@ class Daily {
       weathercode: List<int>.from((json['weathercode'] ?? []).map((x) => x.toInt())),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'time': time,
+      'temperatureMax': temperatureMax,
+      'temperatureMin': temperatureMin,
+      'precipitationSum': precipitationSum,
+      'weathercode': weathercode,
+    };
+  }
 }
 
 class Hourly {
@@ -103,5 +134,15 @@ class Hourly {
       windspeed: List<double>.from((json['windspeed_10m'] ?? []).map((x) => x.toDouble())),
       weathercode: List<int>.from((json['weathercode'] ?? []).map((x) => x.toInt())),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'time': time,
+      'temperature': temperature,
+      'humidity': humidity,
+      'windspeed': windspeed,
+      'weathercode': weathercode,
+    };
   }
 }
