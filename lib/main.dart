@@ -9,6 +9,7 @@ import 'package:climaite/features/weather/bloc/weather_bloc.dart';
 import 'package:climaite/features/weather/bloc/weather_event.dart';
 import 'package:climaite/features/weather/screens/weather_home_screen.dart';
 import 'package:climaite/services/background_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,7 +18,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: ".env"); // Load .env file before app starts
+  await dotenv.load(fileName: ".env");
 
   // Initialize services
   await BackgroundService.initialize();
@@ -86,7 +87,9 @@ class _WeatherHomePageState extends State<WeatherHomePage> {
     final currentLocation = await _locationService.getCurrentLocation();
 
     // log the location details
-    print('Location: $currentLocation');
+    if (kDebugMode) {
+      print('Location: $currentLocation');
+    }
 
     if (currentLocation != null) {
       if (mounted) {
