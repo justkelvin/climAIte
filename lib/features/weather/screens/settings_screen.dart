@@ -1,4 +1,6 @@
 // lib/features/weather/screens/settings_screen.dart
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:climaite/core/constants/app_constants.dart';
 import 'package:climaite/features/weather/bloc/weather_bloc.dart';
 import 'package:climaite/features/weather/bloc/weather_event.dart';
@@ -138,10 +140,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
 
                 // Trigger immediate scheduling of next briefings
-                context.read<WeatherBloc>().add(const LoadWeather(
-                      latitude: AppConstants.defaultLat,
-                      longitude: AppConstants.defaultLon,
-                    ));
+                context.read<WeatherBloc>().add(
+                      const LoadWeather(
+                        latitude: AppConstants.defaultLat,
+                        longitude: AppConstants.defaultLon,
+                      ),
+                    );
               }
 
               setState(() {
