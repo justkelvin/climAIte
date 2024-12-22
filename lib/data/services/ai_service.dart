@@ -33,7 +33,7 @@ class AIService {
         3. Suitable activities for these conditions
         4. Brief forecast trends based on the current weather
         
-        Keep the response concise, short and conversational.
+        Keep the response concise, very short and conversational.
       ''';
 
       final content = [Content.text(prompt)];
