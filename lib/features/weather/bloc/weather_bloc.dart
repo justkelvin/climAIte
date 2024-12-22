@@ -2,6 +2,7 @@
 import 'package:climaite/data/repositories/weather_repository.dart';
 import 'package:climaite/features/weather/bloc/weather_event.dart';
 import 'package:climaite/features/weather/bloc/weather_state.dart';
+import 'package:climaite/services/notification_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
@@ -27,6 +28,12 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         longitude: event.longitude,
         isDefaultLocation: true,
         forceRefresh: event.forceRefresh ?? false,
+      );
+
+      // Schedule daily briefings
+      await NotificationService.instance.scheduleWeatherBriefings(
+        weather: weather,
+        location: 'Your Location',
       );
 
       emit(WeatherLoaded(weather: weather));
