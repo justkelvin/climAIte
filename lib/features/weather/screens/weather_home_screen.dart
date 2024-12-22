@@ -14,6 +14,7 @@ import 'package:climaite/shared/widgets/weather_background.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class WeatherHomeScreen extends StatelessWidget {
   const WeatherHomeScreen({super.key});
@@ -24,9 +25,9 @@ class WeatherHomeScreen extends StatelessWidget {
       builder: (context, state) {
         // Show loading indicator when fetching data
         if (state is WeatherLoading) {
-          return const Scaffold(
+          return Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: Lottie.asset('assets/lottie/app-loading.json', height: 400, width: 400),
             ),
           );
         }
@@ -59,9 +60,9 @@ class WeatherHomeScreen extends StatelessWidget {
 
         // Show weather data when loaded
         if (state is! WeatherLoaded) {
-          return const Scaffold(
+          return Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: Lottie.asset('assets/lottie/app-loading.json', height: 400, width: 400),
             ),
           );
         }
