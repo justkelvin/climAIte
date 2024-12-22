@@ -42,18 +42,33 @@ class WeatherHomeScreen extends StatelessWidget {
                   expandedHeight: 80,
                   floating: true,
                   pinned: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                    title: Text(
-                      'climAIte',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            color: Colors.black,
-                          ),
-                    ),
-                    centerTitle: true,
+                  // Animated App Name
+                  title: TweenAnimationBuilder(
+                    duration: const Duration(milliseconds: 500),
+                    tween: Tween<double>(begin: 0, end: 1),
+                    builder: (context, double value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Text(
+                          'climAIte',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.black, fontSize: 24),
+                        ),
+                      );
+                    },
                   ),
+                  // flexibleSpace: FlexibleSpaceBar(
+                  //   title: Text(
+                  //     'climAIte',
+                  //     style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.black, fontSize: 20),
+                  //   ),
+                  //   centerTitle: false,
+                  // ),
                   actions: [
                     IconButton(
-                      icon: const Icon(Icons.search),
+                      icon: const Icon(
+                        Icons.search,
+                        size: 28,
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -64,7 +79,10 @@ class WeatherHomeScreen extends StatelessWidget {
                       },
                     ),
                     IconButton(
-                      icon: const Icon(Icons.settings),
+                      icon: const Icon(
+                        Icons.settings,
+                        size: 28,
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,
