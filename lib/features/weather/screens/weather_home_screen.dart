@@ -1,4 +1,5 @@
 // lib/features/weather/screens/weather_home_screen.dart
+import 'package:climaite/core/constants/app_constants.dart';
 import 'package:climaite/features/weather/bloc/weather_bloc.dart';
 import 'package:climaite/features/weather/bloc/weather_event.dart';
 import 'package:climaite/features/weather/bloc/weather_state.dart';
@@ -19,8 +20,48 @@ class WeatherHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
+        // Show loading indicator when fetching data
+        if (state is WeatherLoading) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        // Show error state
+        if (state is WeatherError) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(state.message),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<WeatherBloc>().add(
+                            LoadWeather(
+                              latitude: AppConstants.defaultLat,
+                              longitude: AppConstants.defaultLon,
+                              forceRefresh: true,
+                            ),
+                          );
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Show weather data when loaded
         if (state is! WeatherLoaded) {
-          return const SizedBox.shrink();
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         }
 
         final weather = state.weather;
@@ -33,6 +74,7 @@ class WeatherHomeScreen extends StatelessWidget {
                     LoadWeather(
                       latitude: weather.latitude,
                       longitude: weather.longitude,
+                      forceRefresh: true,
                     ),
                   );
             },
