@@ -16,7 +16,7 @@ class CurrentWeatherCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+      color: Theme.of(context).colorScheme.surface.withAlpha(204),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -40,7 +40,7 @@ class CurrentWeatherCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                _buildWeatherIcon(weather.weathercode),
+                _buildWeatherIcon(context, weather.weathercode),
               ],
             ),
             const SizedBox(height: 24),
@@ -67,7 +67,7 @@ class CurrentWeatherCard extends StatelessWidget {
     );
   }
 
-  Widget _buildWeatherIcon(int code) {
+  Widget _buildWeatherIcon(BuildContext context, int code) {
     final weatherType = WeatherCode.fromCode(code);
     IconData iconData;
 
@@ -100,7 +100,7 @@ class CurrentWeatherCard extends StatelessWidget {
     return Icon(
       iconData,
       size: 64,
-      // color: Theme.of(context).colorScheme.primary,
+      color: Theme.of(context).colorScheme.primary,
     );
   }
 

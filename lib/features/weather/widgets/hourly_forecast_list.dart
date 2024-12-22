@@ -66,7 +66,7 @@ class _HourlyForecastCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+      color: Theme.of(context).colorScheme.surface.withAlpha(204),
       margin: const EdgeInsets.only(right: 8),
       child: Container(
         width: 80,

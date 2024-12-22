@@ -15,15 +15,14 @@ class AIService {
     );
   }
 
-  Future<String> getWeatherInsights({
+  Stream<String> streamWeatherInsights({
     required WeatherData currentWeather,
     required String location,
-  }) async {
+  }) async* {
     try {
       final weatherCode = WeatherCode.fromCode(currentWeather.current.weathercode);
       final prompt = '''
-        Act as a weather expert and provide a brief, personalized analysis of the following weather conditions:
-        Location: $location
+        Act as a weather expert and provide a very brief, personalized analysis of the following weather conditions:
         Current Temperature: ${currentWeather.current.temperature}°C
         Weather Condition: ${weatherCode.description}
         Wind Speed: ${currentWeather.current.windspeed} km/h
@@ -32,16 +31,24 @@ class AIService {
         1. How the weather feels
         2. Any precautions needed
         3. Suitable activities for these conditions
-        4. Brief forecast trends
+        4. Brief forecast trends based on the current weather
         
-        Keep the response concise and conversational.
+        Keep the response concise, very short and conversational.
       ''';
 
       final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
-      return response.text ?? 'Unable to generate insights at the moment.';
+
+      // Get the streaming response
+      final responses = _model.generateContentStream(content);
+
+      // Yield each chunk of text as it arrives
+      await for (final response in responses) {
+        if (response.text != null && response.text!.isNotEmpty) {
+          yield response.text!;
+        }
+      }
     } catch (e) {
-      return 'AI insights unavailable: $e';
+      yield 'AI insights unavailable: $e';
     }
   }
 }

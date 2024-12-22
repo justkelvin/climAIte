@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../data/models/weather_model.dart';
 import '../../../data/models/weather_code.dart';
 import '../../../core/providers/settings_provider.dart';
@@ -17,6 +18,18 @@ class DetailedWeatherScreen extends StatelessWidget {
     required this.weather,
     required this.location,
   });
+
+  String _formatWeatherDataForSharing() {
+    final current = weather.current;
+    final weatherCode = WeatherCode.fromCode(current.temperature as int);
+    return '''
+      Weather in $location:
+      🌡️ Temperature: ${current.temperature}°C
+      🌤️ Condition: ${weatherCode.description}
+      💨 Wind: ${current.windspeed} km/h
+      🧭 Wind Direction: ${current.winddirection}°
+    ''';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +92,8 @@ class DetailedWeatherScreen extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.share),
           onPressed: () {
-            // TODO: Implement share functionality
+            final text = _formatWeatherDataForSharing();
+            Share.share(text);
           },
         ),
       ],

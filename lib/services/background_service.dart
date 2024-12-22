@@ -1,5 +1,6 @@
 // lib/services/background_service.dart
 import 'package:climaite/data/repositories/weather_repository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'notification_service.dart';
@@ -32,7 +33,9 @@ void callbackDispatcher() {
 
       return true;
     } catch (e) {
-      print('Background task failed: $e');
+      if (kDebugMode) {
+        print('Background task failed: $e');
+      }
       return false;
     }
   });
