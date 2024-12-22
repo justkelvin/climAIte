@@ -25,7 +25,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        color: Colors.white.withOpacity(0.8),
+        color: Colors.white.withAlpha(204),
       ),
       textTheme: TextTheme(
         displayLarge: GoogleFonts.outfit(
