@@ -1,5 +1,6 @@
 // lib/data/repositories/weather_repository.dart
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/weather_model.dart';
 import '../services/weather_service.dart';
@@ -21,7 +22,9 @@ class WeatherRepository {
     if (isDefaultLocation && !forceRefresh) {
       final cachedData = await _getCachedWeather();
       if (cachedData != null) {
-        print('Weather data loaded from cache');
+        if (kDebugMode) {
+          print('Weather data loaded from cache');
+        }
         return cachedData;
       }
     }
@@ -31,11 +34,15 @@ class WeatherRepository {
       longitude: longitude,
     );
 
-    print('Weather data loaded from API');
+    if (kDebugMode) {
+      print('Weather data loaded from API');
+    }
 
     // await _cacheWeatherData(weatherData);
     if (isDefaultLocation) {
-      print('Caching weather data for default location');
+      if (kDebugMode) {
+        print('Caching weather data for default location');
+      }
       await _cacheWeatherData(weatherData);
     }
 
@@ -62,7 +69,9 @@ class WeatherRepository {
 
       return WeatherData.fromJson(weatherJson);
     } catch (e) {
-      print('Cache error: $e');
+      if (kDebugMode) {
+        print('Cache error: $e');
+      }
       await _clearCache();
       return null;
     }
@@ -76,9 +85,13 @@ class WeatherRepository {
       await prefs.setString(_cachedWeatherKey, jsonEncode(weatherJson));
       await prefs.setInt(_cachedTimestampKey, DateTime.now().millisecondsSinceEpoch);
       // Print the cached data for debugging
-      print('Weather data cached: $weatherJson');
+      if (kDebugMode) {
+        print('Weather data cached: $weatherJson');
+      }
     } catch (e) {
-      print('Caching error: $e');
+      if (kDebugMode) {
+        print('Caching error: $e');
+      }
       await _clearCache();
     }
   }
