@@ -1,8 +1,11 @@
 // lib/features/weather/screens/settings_screen.dart
 import 'package:climaite/core/constants/app_constants.dart';
+import 'package:climaite/features/weather/bloc/weather_bloc.dart';
+import 'package:climaite/features/weather/bloc/weather_event.dart';
 import 'package:climaite/services/background_service.dart';
 import 'package:climaite/services/notification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -24,6 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _isCelsius = true;
   bool _notificationsEnabled = false;
   bool _aiInsightsEnabled = true;
+  bool _dailyBriefingsEnabled = false;
 
   @override
   void initState() {
@@ -113,6 +117,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 // Cancel background task
                 await BackgroundService.cancelAllTasks();
               }
+            },
+          ),
+          SwitchListTile(
+            title: const Text('Daily Weather Briefings'),
+            subtitle: const Text('Get weather updates at 7 AM and 8 PM'),
+            value: _dailyBriefingsEnabled,
+            onChanged: (value) async {
+              if (value) {
+                final granted = await NotificationService.instance.requestPermission();
+                if (!granted) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Notification permission denied'),
+                      ),
+                    );
+                  }
+                  return;
+                }
+
+                // Trigger immediate scheduling of next briefings
+                context.read<WeatherBloc>().add(const LoadWeather(
+                      latitude: AppConstants.defaultLat,
+                      longitude: AppConstants.defaultLon,
+                    ));
+              }
+
+              setState(() {
+                _dailyBriefingsEnabled = value;
+              });
+              await _prefs.setBool('daily_briefings_enabled', value);
             },
           ),
           const Divider(),
