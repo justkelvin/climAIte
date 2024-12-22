@@ -348,7 +348,7 @@ class NotificationService {
     }
 
     // Add temperature range
-    conditions.add('High: ${weather.daily.temperatureMax[0].round()}°C, ' + 'Low: ${weather.daily.temperatureMin[0].round()}°C');
+    conditions.add('High: ${weather.daily.temperatureMax[0].round()}°C, ' 'Low: ${weather.daily.temperatureMin[0].round()}°C');
 
     // Add wind info if significant
     if (weather.current.windspeed > 20) {
