@@ -98,7 +98,7 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
                     subtitle: Text(location.country),
                     onTap: () {
                       context.read<WeatherBloc>().add(
-                            LoadWeather(
+                            SearchWeather(
                               latitude: location.latitude,
                               longitude: location.longitude,
                             ),
