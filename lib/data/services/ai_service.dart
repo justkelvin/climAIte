@@ -15,10 +15,10 @@ class AIService {
     );
   }
 
-  Future<String> getWeatherInsights({
+  Stream<String> streamWeatherInsights({
     required WeatherData currentWeather,
     required String location,
-  }) async {
+  }) async* {
     try {
       final weatherCode = WeatherCode.fromCode(currentWeather.current.weathercode);
       final prompt = '''
@@ -37,10 +37,18 @@ class AIService {
       ''';
 
       final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
-      return response.text ?? 'Unable to generate insights at the moment.';
+
+      // Get the streaming response
+      final responses = _model.generateContentStream(content);
+
+      // Yield each chunk of text as it arrives
+      await for (final response in responses) {
+        if (response.text != null && response.text!.isNotEmpty) {
+          yield response.text!;
+        }
+      }
     } catch (e) {
-      return 'AI insights unavailable: $e';
+      yield 'AI insights unavailable: $e';
     }
   }
 }
