@@ -9,7 +9,9 @@ import 'package:climaite/features/weather/widgets/ai_insights_card.dart';
 import 'package:climaite/features/weather/widgets/current_weather_card.dart';
 import 'package:climaite/features/weather/widgets/daily_forecast_list.dart';
 import 'package:climaite/features/weather/widgets/hourly_forecast_list.dart';
+import 'package:climaite/services/notification_service.dart';
 import 'package:climaite/shared/widgets/weather_background.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -81,7 +83,7 @@ class WeatherHomeScreen extends StatelessWidget {
             child: CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  expandedHeight: 80,
+                  expandedHeight: 70,
                   floating: true,
                   pinned: true,
                   // Animated App Name
@@ -106,6 +108,14 @@ class WeatherHomeScreen extends StatelessWidget {
                   //   centerTitle: false,
                   // ),
                   actions: [
+                    if (kDebugMode)
+                      IconButton(
+                        icon: const Icon(Icons.notification_add),
+                        onPressed: () async {
+                          await NotificationService.instance.triggerTestNotification();
+                        },
+                        tooltip: 'Test Weather Alert',
+                      ),
                     IconButton(
                       icon: const Icon(
                         Icons.search,
