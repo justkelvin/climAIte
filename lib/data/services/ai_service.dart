@@ -1,11 +1,11 @@
 // lib/data/services/ai_service.dart
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:climaite/core/config/app_config.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import '../models/weather_model.dart';
 import '../models/weather_code.dart';
 
 class AIService {
-  static final String _apiKey = dotenv.env['GEMINI_API_KEY'] ?? 'default_value';
+  static final String _apiKey = AppConfig.geminiApiKey;
   late final GenerativeModel _model;
 
   AIService() {
