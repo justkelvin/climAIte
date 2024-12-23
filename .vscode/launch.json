@@ -19,7 +19,10 @@
             "name": "climAIte (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "args": [
+                "--dart-define=GEMINI_API_KEY=your_development_api_key"
+            ]
         }
     ]
 }
