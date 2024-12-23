@@ -21,9 +21,11 @@ jobs:
       contents: write
 
     steps:
-      # Checkout the repository
+      # Checkout the repository with full history for changelog
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # This gets the full history for changelog
         
       # Set up JDK 17
       - name: Set up JDK 17
@@ -86,35 +88,53 @@ jobs:
             build/app/outputs/bundle/release/app-release.aab
 
       # Extract Version
-      - name: Extract version from pubspec.yaml
-        id: extract_version
+      - name: Process Version
+        id: version
         run: |
-          version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
-          echo "VERSION=$version" >> $GITHUB_ENV
+          base_version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+          echo "BASE_VERSION=${base_version}" >> $GITHUB_ENV
           
-      # Check if Tag Exists
-      - name: Check if Tag Exists
-        id: check_tag
-        run: |
-          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
-            echo "TAG_EXISTS=true" >> $GITHUB_ENV
-          else
-            echo "TAG_EXISTS=false" >> $GITHUB_ENV
-          fi
+          # Generate new version using date and run number for uniqueness
+          build_date=$(date +'%Y%m%d')
+          new_version="1.0.${build_date}.${GITHUB_RUN_NUMBER}"
+          echo "NEW_VERSION=${new_version}" >> $GITHUB_ENV
 
-      # Modify Tag if it Exists
-      - name: Modify Tag
-        if: env.TAG_EXISTS == 'true'
-        id: modify_tag
+      # Generate Changelog
+      - name: Generate Changelog
+        id: changelog
         run: |
-          new_version="${{ env.VERSION }}-build-${{ github.run_number }}"
-          echo "VERSION=$new_version" >> $GITHUB_ENV
-  
-      # Upload APK to GitHub release
-      - name: Upload APK to GitHub Release
+          echo "Generating changelog..."
+          echo "# Changelog" > CHANGELOG.md
+          echo "## New in version ${{ env.NEW_VERSION }}" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          
+          # Get the last release tag
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$last_tag" ]; then
+            # If no previous tag exists, get all commits
+            git log --pretty=format:"* %s (%h)" >> CHANGELOG.md
+          else
+            # Get commits since last tag
+            git log ${last_tag}..HEAD --pretty=format:"* %s (%h)" >> CHANGELOG.md
+          fi
+          
+          # Save changelog content for the release
+          CHANGELOG_CONTENT=$(cat CHANGELOG.md)
+          echo "CHANGELOG_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # Upload APK to GitHub Release
+      - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          tag: v${{ env.VERSION }}
+          tag: v${{ env.NEW_VERSION }}
+          name: "Release v${{ env.NEW_VERSION }}"
+          body: ${{ env.CHANGELOG_CONTENT }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          # name: "Release for ${{ github.ref }}"
-          artifacts: build/app/outputs/flutter-apk/app-release.apk
+          artifacts: |
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
+          makeLatest: true
+          replacesArtifacts: true
