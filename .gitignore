@@ -12,6 +12,12 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+.vscode/launch.json
+
+# Keystore files
+*.jks
+*.jks.old
+key.properties
 
 # IntelliJ related
 *.iml
